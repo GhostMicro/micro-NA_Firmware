@@ -1,0 +1,31 @@
+site_name: NA Framework Documentation
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - content.code.annotate
+
+nav:
+  - Introduction: index.md
+  - Technical Law: NA_BLUEPRINT.md
+  - Hardware & Architecture: hardware.md
+  - CLI & Protocol: protocol.md
+  - Troubleshooting: troubleshooting.md
