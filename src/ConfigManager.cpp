@@ -328,3 +328,34 @@ void ConfigManager::resetAll() {
   serializeJson(doc, Serial);
   Serial.println();
 }
+
+// ===== Generic Static Accessors =====
+int ConfigManager::getInt(const char *key, int defaultValue) {
+  Preferences p;
+  p.begin(NAMESPACE, true);
+  int val = p.getInt(key, defaultValue);
+  p.end();
+  return val;
+}
+
+void ConfigManager::setInt(const char *key, int value) {
+  Preferences p;
+  p.begin(NAMESPACE, false);
+  p.putInt(key, value);
+  p.end();
+}
+
+float ConfigManager::getFloat(const char *key, float defaultValue) {
+  Preferences p;
+  p.begin(NAMESPACE, true);
+  float val = p.getFloat(key, defaultValue);
+  p.end();
+  return val;
+}
+
+void ConfigManager::setFloat(const char *key, float value) {
+  Preferences p;
+  p.begin(NAMESPACE, false);
+  p.putFloat(key, value);
+  p.end();
+}

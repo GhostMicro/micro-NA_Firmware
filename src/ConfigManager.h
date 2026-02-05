@@ -123,6 +123,12 @@ public:
    */
   void resetAll();
 
+  // ===== Generic Static Accessors (Standard Requirement) =====
+  static int getInt(const char *key, int defaultValue = 0);
+  static void setInt(const char *key, int value);
+  static float getFloat(const char *key, float defaultValue = 0.0f);
+  static void setFloat(const char *key, float value);
+
 private:
   Preferences prefs;
   static const char *NAMESPACE;

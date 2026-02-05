@@ -55,6 +55,7 @@ private:
     static const uint16_t ADC_MAX;              // 12-bit: 4095
     static const uint16_t MIN_VOLTAGE_MV;      // 3000mV (3.0V)
     static const uint16_t MAX_VOLTAGE_MV;      // 4200mV (4.2V)
+    static const uint16_t RTL_VOLTAGE_MV;      // 3400mV (3.4V) - Phase 14
     
     /**
      * Smooth ADC readings with moving average

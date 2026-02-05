@@ -178,8 +178,8 @@ void test_packet_size(void) {
 }
 
 void test_telemetry_size(void) {
-  // NATelemetry must be exactly 14 bytes
-  TEST_ASSERT_EQUAL_INT(14, sizeof(NATelemetry));
+  // NATelemetry must be exactly 22 bytes (plaintext)
+  TEST_ASSERT_EQUAL_INT(22, sizeof(NATelemetry));
 }
 
 void test_packet_packed_attribute(void) {

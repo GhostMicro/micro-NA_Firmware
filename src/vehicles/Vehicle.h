@@ -9,6 +9,7 @@ public:
   virtual void setup() = 0;
   virtual void loop() = 0;
   virtual void setInputs(NAPacket *packet) = 0;
+  virtual void getMixedOutput(uint8_t *motorPwm, uint8_t motorCount) = 0;
   virtual String getName() const = 0;
 };
 

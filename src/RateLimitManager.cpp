@@ -1,4 +1,5 @@
 #include "RateLimitManager.h"
+#include <Arduino.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -49,7 +50,7 @@ bool RateLimitManager_init(uint8_t initialTokens) {
     
     gRateLimitState.tokens = initialTokens;
     gRateLimitState.capacity = RATE_LIMIT_CAPACITY;
-    gRateLimitState.lastRefillTime = 0;  // Will be set by first refill call
+    gRateLimitState.lastRefillTime = millis(); 
     gRateLimitState.totalAllowed = 0;
     gRateLimitState.totalBlocked = 0;
     gRateLimitState.initialized = true;
@@ -66,8 +67,22 @@ RateLimitStatus RateLimitManager_checkCommand(uint8_t commandType) {
         return RATE_LIMIT_BLOCKED;
     }
     
+    // Auto-refill based on time elapsed instead of manual loop call
+    uint32_t now = millis();
+    uint32_t elapsed = now - gRateLimitState.lastRefillTime;
+    
+    // 1 token every 10ms (100 tokens per sec)
+    if (elapsed >= 10) {
+        uint8_t refillCount = elapsed / 10;
+        gRateLimitState.tokens += refillCount;
+        if (gRateLimitState.tokens > gRateLimitState.capacity) {
+            gRateLimitState.tokens = gRateLimitState.capacity;
+        }
+        gRateLimitState.lastRefillTime += refillCount * 10;
+    }
+
     // Check global token bucket
-    if (gRateLimitState.tokens <= 0) {
+    if (gRateLimitState.tokens == 0) {
         gRateLimitState.totalBlocked++;
         return RATE_LIMIT_EXCEEDED;
     }
@@ -75,7 +90,6 @@ RateLimitStatus RateLimitManager_checkCommand(uint8_t commandType) {
     // Check per-command rate limit (if set)
     if (gCommandLimits.maxPerSecond[commandType] > 0) {
         // Phase 9: Implement per-command tracking
-        // For now: just use global bucket
     }
     
     // Command allowed: consume one token
@@ -86,23 +100,7 @@ RateLimitStatus RateLimitManager_checkCommand(uint8_t commandType) {
 }
 
 uint8_t RateLimitManager_refill(void) {
-    if (!gRateLimitState.initialized) {
-        return 0;
-    }
-    
-    // Increment by RATE_LIMIT_REFILL_PER_MS tokens
-    // Call every RATE_LIMIT_REFILL_INTERVAL (10ms) in main loop
-    // This gives 100 tokens per second
-    
-    if (gRateLimitState.tokens < gRateLimitState.capacity) {
-        gRateLimitState.tokens += RATE_LIMIT_REFILL_PER_MS;
-        
-        // Cap at capacity
-        if (gRateLimitState.tokens > gRateLimitState.capacity) {
-            gRateLimitState.tokens = gRateLimitState.capacity;
-        }
-    }
-    
+    // Deprecated: Now handled automatically in checkCommand
     return gRateLimitState.tokens;
 }
 

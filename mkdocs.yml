@@ -24,8 +24,19 @@ theme:
     - content.code.annotate
 
 nav:
-  - Introduction: index.md
-  - Technical Law: NA_BLUEPRINT.md
-  - Hardware & Architecture: hardware.md
-  - CLI & Protocol: protocol.md
-  - Troubleshooting: troubleshooting.md
+  - Overview: index.md
+  - Configuration:
+      - PID Tuning: config/pid.md
+      - Motor Settings: config/motor.md
+      - Security: config/security.md
+      - Joystick & Deadzone: config/joystick.md
+  - Systems:
+      - Navigation: systems/navigation.md
+      - Connectivity: systems/connectivity.md
+  - Advanced:
+      - Blueprint: NA_BLUEPRINT.md
+      - Hardware & Architecture: hardware.md
+      - CLI & Protocol: protocol.md
+      - Memory Profiling: advanced/memory.md
+      - Troubleshooting: troubleshooting.md
+      - Firmware Build Rules: firmware-build-rules.md

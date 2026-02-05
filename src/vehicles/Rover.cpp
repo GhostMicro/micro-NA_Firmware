@@ -45,6 +45,9 @@ void Rover::drive(int16_t throttle, int16_t steering) {
     motorRight->setSpeed(rightSpeed / 10);
 }
 
-String Rover::getName() const {
-    return "ROVER";
+void Rover::getMixedOutput(uint8_t *motorPwm, uint8_t motorCount) {
+  if (motorCount >= 1 && motorLeft) motorPwm[0] = (uint8_t)abs(motorLeft->getCurrentSpeed());
+  if (motorCount >= 2 && motorRight) motorPwm[1] = (uint8_t)abs(motorRight->getCurrentSpeed());
 }
+
+String Rover::getName() const { return "ROVER"; }

@@ -11,6 +11,7 @@ public:
     void setup() override;
     void loop() override;
     void setInputs(NAPacket* packet) override;
+    void getMixedOutput(uint8_t* motorPwm, uint8_t motorCount) override;
     String getName() const override;
     
 private:

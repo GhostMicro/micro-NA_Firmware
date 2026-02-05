@@ -53,6 +53,9 @@ void Plane::updateControls(int16_t throttle, int16_t roll, int16_t pitch) {
     elevator->write(elevatorAngle);
 }
 
-String Plane::getName() const {
-    return "PLANE";
+void Plane::getMixedOutput(uint8_t *motorPwm, uint8_t motorCount) {
+  if (motorCount >= 1 && motor) motorPwm[0] = (uint8_t)abs(motor->getCurrentSpeed());
+  // Servos are not technically "motors" in the same sense but could be added here
 }
+
+String Plane::getName() const { return "PLANE"; }

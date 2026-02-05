@@ -1,4 +1,5 @@
 #include "Sub.h"
+#include "DepthManager.h"
 
 Sub::Sub() : forwardMotor(nullptr), yawMotor(nullptr), verticalMotor(nullptr), trimBallast(nullptr) {
     memset(&currentInputs, 0, sizeof(NAPacket));
@@ -48,7 +49,15 @@ void Sub::updateThrusters(int16_t throttle, int16_t steering, int16_t depth, int
     // Apply to thrusters
     forwardMotor->setSpeed(throttle);
     yawMotor->setSpeed(steering);
-    verticalMotor->setSpeed(depth);
+    
+    // Depth Control: Manual vs Auto
+    if (DepthManager::getInstance().isDiving()) {
+        // Map -1.0..1.0 from PDF to -100..100 for motor
+        float depthOutput = DepthManager::getInstance().getVerticalOutput() * 100.0f;
+        verticalMotor->setSpeed((int16_t)depthOutput);
+    } else {
+        verticalMotor->setSpeed(depth);
+    }
     
     // Trim ballast (0-180 degrees, 90 = neutral)
     int16_t trimAngle = 90 + (yaw / 2);
@@ -56,6 +65,10 @@ void Sub::updateThrusters(int16_t throttle, int16_t steering, int16_t depth, int
     trimBallast->write(trimAngle);
 }
 
-String Sub::getName() const {
-    return "SUB";
+void Sub::getMixedOutput(uint8_t *motorPwm, uint8_t motorCount) {
+  if (motorCount >= 1 && forwardMotor) motorPwm[0] = (uint8_t)abs(forwardMotor->getCurrentSpeed());
+  if (motorCount >= 2 && yawMotor) motorPwm[1] = (uint8_t)abs(yawMotor->getCurrentSpeed());
+  if (motorCount >= 3 && verticalMotor) motorPwm[2] = (uint8_t)abs(verticalMotor->getCurrentSpeed());
 }
+
+String Sub::getName() const { return "SUB"; }

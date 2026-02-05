@@ -13,7 +13,7 @@ void JoystickCalibrator::beginCalibration(CalibrationAxis axis) {
     currentAxis = axis;
     currentStep = STEP_MIN;
     
-    StaticJsonDocument<128> doc;
+    JsonDocument doc;
     doc["msg"] = "Calibration started";
     doc["axis"] = (int)axis;
     doc["axis_name"] = (axis == AXIS_THROTTLE ? "THROTTLE" : 
@@ -42,7 +42,7 @@ void JoystickCalibrator::recordCalibrationPoint(uint16_t rawValue) {
         *maxPtr = rawValue;
         currentStep = STEP_COMPLETE;
         
-        StaticJsonDocument<128> doc;
+        JsonDocument doc;
         doc["msg"] = "Calibration complete for axis";
         doc["axis"] = (int)currentAxis;
         serializeJson(doc, Serial);

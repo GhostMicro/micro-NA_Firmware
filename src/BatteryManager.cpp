@@ -5,6 +5,7 @@ const float BatteryManager::ADC_REF_VOLTAGE = 3.3f;
 const uint16_t BatteryManager::ADC_MAX = 4095;
 const uint16_t BatteryManager::MIN_VOLTAGE_MV = 3000;
 const uint16_t BatteryManager::MAX_VOLTAGE_MV = 4200;
+const uint16_t BatteryManager::RTL_VOLTAGE_MV = 3400;
 
 BatteryManager::BatteryManager() : sampleIndex(0) {
     memset(adcSamples, 0, sizeof(adcSamples));

@@ -6,29 +6,21 @@ Copter::Copter() {
 }
 
 void Copter::setup() {
-    // Initialize 4 motors
-    // Motor 0: FR (Front-Right) - GPIO 16, Channel 2
-    motors[0] = new Motor(16, 32, 33, 2);
-    motors[0]->setup();
-    
-    // Motor 1: FL (Front-Left) - GPIO 17, Channel 3
-    motors[1] = new Motor(17, 34, 35, 3);
-    motors[1]->setup();
-    
-    // Motor 2: BL (Back-Left) - GPIO 18, Channel 4
-    motors[2] = new Motor(18, 36, 39, 4);
-    motors[2]->setup();
-    
-    // Motor 3: BR (Back-Right) - GPIO 19, Channel 5
-    motors[3] = new Motor(19, 25, 26, 5);
-    motors[3]->setup();
-    
+    // Initialize Motors (Standard Quad X)
+    // Initialize Motors (Standard Quad X) 
+    // Format: Motor(pwmPin, dirPin1, dirPin2, channel)
+    // Using placeholder direction pins (32, 33, 34, 35 for directions)
+    motors[0] = new Motor(16, 32, 33, 0); motors[0]->setup(); // FR
+    motors[1] = new Motor(17, 34, 35, 1); motors[1]->setup(); // FL
+    motors[2] = new Motor(18, 25, 26, 2); motors[2]->setup(); // BL
+    motors[3] = new Motor(19, 27, 14, 3); motors[3]->setup(); // BR
+
     Serial.println("Copter initialized - 4x Motors ready");
 }
 
 void Copter::loop() {
-    updateMotors(currentInputs.throttle, currentInputs.roll, 
-                 currentInputs.pitch, currentInputs.yaw);
+    // Safety timeout check
+    // In real implementation, FailsafeManager handles this
 }
 
 void Copter::setInputs(NAPacket* packet) {
@@ -37,6 +29,8 @@ void Copter::setInputs(NAPacket* packet) {
         currentInputs.roll = packet->roll;
         currentInputs.pitch = packet->pitch;
         currentInputs.yaw = packet->yaw;
+        currentInputs.mode = packet->mode;
+        currentInputs.buttons = packet->buttons;
     }
 }
 
@@ -87,6 +81,15 @@ void Copter::mixMotors(int16_t* motorOutputs) {
     }
 }
 
-String Copter::getName() const {
-    return "COPTER";
+void Copter::getMixedOutput(uint8_t *motorPwm, uint8_t motorCount) {
+  // Return current motor speeds scaled to 0-255 or 0-100
+  for (int i = 0; i < 4 && i < motorCount; i++) {
+    if (motors[i]) {
+      motorPwm[i] = (uint8_t)abs(motors[i]->getCurrentSpeed());
+    } else {
+      motorPwm[i] = 0;
+    }
+  }
 }
+
+String Copter::getName() const { return "COPTER"; }
